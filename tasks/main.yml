@@ -1,0 +1,33 @@
+---
+
+- name: Add ingress rules from other security groups
+  os_security_group_rule:
+    state: present
+    security_group: "{{ item.security_group }}"
+    protocol: "{{ item.protocol }}"
+    port_range_min: "{{ item.port_range_min }}"
+    port_range_max: "{{ item.port_range_max }}"
+    remote_group: "{{ item.remote_group }}"
+  when: item.remote_group is defined
+  with_items: "{{ server_security_group_rules }}"
+
+- name: Add ingress rules from network addresses
+  os_security_group_rule:
+    state: present
+    security_group: "{{ item.security_group }}"
+    protocol: "{{ item.protocol }}"
+    port_range_min: "{{ item.port_range_min }}"
+    port_range_max: "{{ item.port_range_max }}"
+    remote_ip_prefix: "{{ item.remote_ip_prefix }}"
+  when: item.remote_ip_prefix is defined
+  with_items: "{{ server_security_group_rules }}"
+
+- os_server:
+    state: present
+    name: "{{ item }}"
+    security_groups: "{{ server_security_groups }}"
+    image: "{{ server_image }}"
+    flavor: "{{ server_flavor }}"
+    key_name: "{{ server_key_name }}"
+  with_items: "{{ server_list }}"
+
