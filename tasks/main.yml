@@ -34,8 +34,8 @@
     state: present
     name: "{{ item }}"
     security_groups: "{{ server_attach_security_groups }}"
-    image: "{{ server_image }}"
-    flavor: "{{ server_flavor }}"
-    key_name: "{{ server_key_name }}"
-  with_items: "{{ server_list }}"
+    image: '{{ hostvars[item].get("server_image", "") }}'
+    flavor: '{{ hostvars[item].get("server_flavor", "") }}'
+    key_name: '{{ hostvars[item].get("server_key_name", "") }}'
+  with_items: "{{ groups[server_app] }}"
 
