@@ -1,5 +1,12 @@
 ---
 
+- name: create new SGs for server if needed
+  os_security_group:
+    name: "{{ item.name }}"
+    description: "{{ item.description }}"
+    state: present
+    with_items: "{{ server_create_security_groups }}"
+
 - name: Add ingress rules from other security groups
   os_security_group_rule:
     state: present
@@ -25,7 +32,7 @@
 - os_server:
     state: present
     name: "{{ item }}"
-    security_groups: "{{ server_security_groups }}"
+    security_groups: "{{ server_attach_security_groups }}"
     image: "{{ server_image }}"
     flavor: "{{ server_flavor }}"
     key_name: "{{ server_key_name }}"
