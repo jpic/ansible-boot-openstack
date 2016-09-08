@@ -38,6 +38,7 @@
     flavor: '{{ hostvars[item].get("server_flavor", "") }}'
     key_name: '{{ hostvars[item].get("server_key_name", "") }}'
     network: '{{ hostvars[item].get("server_internal_network", "") }}'
+    auto_ip: no
   with_items: "{{ groups[server_app] }}"
 
 - os_floating_ip:
