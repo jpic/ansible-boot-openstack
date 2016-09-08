@@ -5,7 +5,7 @@
     name: "{{ item.name }}"
     description: "{{ item.description }}"
     state: present
-    with_items: "{{ server_create_security_groups }}"
+  with_items: "{{ server_create_security_groups }}"
   when: server_create_security_groups != []
 
 - name: Add ingress rules from other security groups
@@ -37,5 +37,12 @@
     image: '{{ hostvars[item].get("server_image", "") }}'
     flavor: '{{ hostvars[item].get("server_flavor", "") }}'
     key_name: '{{ hostvars[item].get("server_key_name", "") }}'
+    network: '{{ server_internal_network }}'
   with_items: "{{ groups[server_app] }}"
 
+- os_floating_ip:
+    state: present
+    server: "{{ item }}"
+    network: '{{ hostvars[item].get("server_floating_network", "") }}'
+  when: hostvars[item].get("server_floating_network", None) is defined
+  with_items: "{{ groups[server_app] }}"
