@@ -37,12 +37,12 @@
     image: '{{ hostvars[item].get("server_image", "") }}'
     flavor: '{{ hostvars[item].get("server_flavor", "") }}'
     key_name: '{{ hostvars[item].get("server_key_name", "") }}'
-    network: '{{ server_internal_network }}'
+    network: '{{ hostvars[item].get("server_internal_network", "") }}'
   with_items: "{{ groups[server_app] }}"
 
 - os_floating_ip:
     state: present
     server: "{{ item }}"
     network: '{{ hostvars[item].get("server_floating_network", "") }}'
-  when: hostvars[item].get("server_floating_network", None) is defined
+  when: hostvars[item].get("server_floating_network") != None
   with_items: "{{ groups[server_app] }}"

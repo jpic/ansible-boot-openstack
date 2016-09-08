@@ -13,12 +13,10 @@
         port_range_min: 22
         port_range_max: 22
         remote_ip_prefix: '0.0.0.0/0'
-    server_internal_network: INSIDE_NET
-    server_floating_network: public_network
     server_attach_security_groups: openstack-test_sg
 
   pre_tasks:
-  - add_host: name=openstack-test groups='{{ server_app }}' server_image='debian-wheezy' server_flavor='m1.small' server_key_name='test'
+  - add_host: name=openstack-test groups='{{ server_app }}' server_image='debian-wheezy' server_flavor='m1.small' server_key_name='test' server_internal_network='INSIDE_NET' server_floating_network='public_network'
 
   roles:
     - role: "{{ playbook_dir }}"

@@ -1,4 +1,3 @@
 ---
 
 server_create_security_groups: []
-server_internal_network: None
