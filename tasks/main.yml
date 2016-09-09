@@ -30,6 +30,10 @@
   when: item.remote_ip_prefix is defined
   with_items: "{{ server_security_group_rules }}"
 
+## need to check if the default valut should be an empty list or dict so that
+## we can us os_server without specifying some parameters
+## -- can only do one key=value pair not tested multiple keys, and
+## -- key=value1,value2 fails
 - os_server:
     state: present
     name: "{{ item }}"
@@ -38,6 +42,7 @@
     flavor: '{{ hostvars[item].get("server_flavor", "") }}'
     key_name: '{{ hostvars[item].get("server_key_name", "") }}'
     network: '{{ hostvars[item].get("server_internal_network", "") }}'
+    meta: '{{ hostvars[item].get("server_metadata", {}) }}'
     auto_ip: no
   with_items: "{{ groups[server_app] }}"
 

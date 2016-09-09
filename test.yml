@@ -16,8 +16,7 @@
     server_attach_security_groups: openstack-test_sg
 
   pre_tasks:
-  - add_host: name=openstack-test groups='{{ server_app }}' server_image='debian-wheezy' server_flavor='m1.small' server_key_name='test' server_internal_network='INSIDE_NET' server_floating_network='public_network'
+  - add_host: name=openstack-test groups='{{ server_app }}' server_image='debian-wheezy' server_flavor='m1.small' server_key_name='test' server_internal_network='INSIDE_NET' server_floating_network='public_network' server_metadata='groups=openstack-test-group'
 
   roles:
     - role: "{{ playbook_dir }}"
-
