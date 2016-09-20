@@ -5,6 +5,7 @@
     name: "{{ item.name }}"
     description: "{{ item.description }}"
     state: present
+    wait: yes
   with_items: "{{ server_create_security_groups }}"
   when: server_create_security_groups != []
 
@@ -16,6 +17,7 @@
     port_range_min: "{{ item.port_range_min }}"
     port_range_max: "{{ item.port_range_max }}"
     remote_group: "{{ item.remote_group }}"
+    wait: yes
   when: item.remote_group is defined
   with_items: "{{ server_security_group_rules }}"
 
@@ -27,6 +29,7 @@
     port_range_min: "{{ item.port_range_min }}"
     port_range_max: "{{ item.port_range_max }}"
     remote_ip_prefix: "{{ item.remote_ip_prefix }}"
+    wait: yes
   when: item.remote_ip_prefix is defined
   with_items: "{{ server_security_group_rules }}"
 
@@ -45,11 +48,13 @@
     meta:
       groups: '{{ hostvars[item].get("server_groups", "") }}'
     auto_ip: no
+    wait: yes
   with_items: "{{ groups[server_app] }}"
 
 - os_floating_ip:
     state: present
     server: "{{ item }}"
     network: '{{ hostvars[item].get("server_floating_network", "") }}'
+    wait: yes
   when: hostvars[item].get("server_floating_network") != None
   with_items: "{{ groups[server_app] }}"
