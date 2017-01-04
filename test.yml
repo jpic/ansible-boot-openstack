@@ -3,6 +3,7 @@
 - hosts: localhost
 
   vars:
+    key_name: openstack-test{{ lookup('ENV', 'ANSIBLE_VERSION').replace('.', '') }}
     server_app: openstack-test
     server_create_security_groups:
       - name: "openstack-test_sg"
@@ -16,7 +17,26 @@
     server_attach_security_groups: openstack-test_sg
 
   pre_tasks:
-  - add_host: name=openstack-test groups='{{ server_app }}' server_image='debian-wheezy' server_flavor='m1.small' server_key_name='test' server_internal_network='INSIDE_NET' server_floating_network='public_network' server_groups='openstack-test-group,second-test-group'
+  - name: Clean key
+    os_keypair:
+      name: "{{ key_name }}"
+      state: absent
+
+  - name: Clean host
+    os_server:
+      name: test
+      state: absent
+
+  - add_host:
+      name: openstack-test
+      groups: '{{ server_app }}'
+      server_image: 'debian-wheezy'
+      server_flavor: 'm1.small'
+      #server_internal_network: '81b92629-f2fe-4aae-bf01-3f2288234771'
+      server_internal_network: 'INSIDE_NET'
+      server_floating_network: 'FLOATING_NET'
+      server_groups: 'openstack-test-group,second-test-group'
+      server_key_name: "{{ key_name }}"
 
   roles:
     - role: "{{ playbook_dir }}"
