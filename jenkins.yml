@@ -6,5 +6,4 @@
 ansible-boot-openstack-test:
   <<: *job_definition
   script: |
-    env | grep OS_
     ANSIBLE_FORCE_COLOR=1 ANSIBLE_STDOUT_CALLBACK=debug /opt/ansible-$ANSIBLE_VERSION/bin/ansible-playbook -vvv --diff test.yml
